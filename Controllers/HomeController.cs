@@ -33,7 +33,7 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index(int pagina = 1)
     {
-        const int ItensPorPagina = 10; // Número de itens por página
+        const int ItensPorPagina = 10; // NÃºmero de itens por pÃ¡gina
 
         int totalRegistros = await _ocorrenciaService.Count();
         int totalPaginas = (int)Math.Ceiling(totalRegistros / (double)ItensPorPagina);
@@ -55,8 +55,6 @@ public class HomeController : Controller
                                                   Text = EnumExtensions.GetDisplayName(v),
                                                   Value = ((int)v).ToString()
                                               });
-
-
         return View();
     }
 
@@ -65,11 +63,11 @@ public class HomeController : Controller
     {
         try
         {
-            const int ItensPorPagina = 10; // Número de itens por página
+            const int ItensPorPagina = 10; // NÃºmero de itens por pÃ¡gina
 
             (var ocorrencias, int totalRegistros) = await _ocorrenciaService.CarregarOcorrencias(pagina, dto);
 
-            // Formatação das ocorrências para envio
+            // FormataÃ§Ã£o das ocorrÃªncias para envio
             var ocorrenciasFormatadas = ocorrencias.Select(o => new
             {
                 o.Id,
@@ -78,7 +76,7 @@ public class HomeController : Controller
                 TransportadorDescricao = o.Transportador.Descricao,
                 TransportadorCnpj = o.Transportador.CNPJ,
                 SolucaoEm = o.Solucao_Em.HasValue ? o.Solucao_Em.Value.ToString("dd/MM/yyyy HH:mm") : "-",
-                JaSolucionada = o.Solucao_Em.HasValue ? "Sim" : "Não",
+                JaSolucionada = o.Solucao_Em.HasValue ? "Sim" : "NÃ£o",
                 DiasEmAberto = (DateTime.Now - o.Ocorreu_Em).Days 
             });
 
@@ -88,7 +86,7 @@ public class HomeController : Controller
         }
         catch (Exception ex)
         {
-            return BadRequest("Erro ao carregar ocorrências: " + ex.Message);
+            return BadRequest("Erro ao carregar ocorrÃªncias: " + ex.Message);
         }
     }
 
