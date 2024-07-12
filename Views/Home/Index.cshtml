@@ -1,0 +1,476 @@
+﻿@page
+@model List<Ocorrencia>
+@{
+    var pagina = ViewBag.PaginaAtual;
+    var totalPaginas = ViewBag.TotalPaginas;
+    var totalRegistros = ViewBag.totalRegistros;
+}
+<h1>Visão Geral</h1>
+
+<table id="tabelaOcorrencias" class="table table-striped table-responsive">
+    <thead>
+        <tr class="text-center">
+            <th><input type="checkbox"></th>
+            <th>Ocorrência</th>
+            <th>Tipo de Ocorrência</th>
+            <th>Ocorreu em / Agendado para</th>
+            <th>Transportador</th>
+            <th>Transportador CNPJ/CPF</th>
+            <th>Solução</th>
+            <th>Já Solucionada</th>
+            <th>Dias em Aberto</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody class="text-center">
+    </tbody>
+</table>
+
+<nav aria-label="Paginação" class="d-flex justify-content-between">
+
+    <ul id="pagination" class="pagination justify-content-start">
+    </ul>
+
+    <span class="text-right" id="totalRegistros">
+    </span>
+</nav>
+
+<div class="mt-3">
+    <div class="row g-2 align-items-center">
+        <div class="col-auto">
+            <select id="selectColuna1" class="form-select" onchange="toggleFiltros(this.value, 1)">
+                <option value="">Selecionar...</option>
+                <option value="Id">Ocorrência</option>
+                <option value="TipoOcorrencia">Tipo de Ocorrência</option>
+                <option value="Ocorreu_Em">Ocorreu em / Agendado para</option>
+                <option value="TransportadorDescricao">Transportador</option>
+                <option value="TransportadorCnpj">Transportador CNPJ/CPF</option>
+                <option value="Solucao_Em">Solução</option>
+                <option value="JaSolucionada">Já Solucionada</option>
+                <option value="DiasEmAberto">Dias em Aberto</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <select id="selectNumerico1" class="form-select">
+                <option value="0">Igual a</option>
+                <option value="1">Maior que</option>
+                <option value="2">Menor que</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <i class="fas fa-trash-alt fa-lg text-black-50" style="cursor: pointer;" onclick="limparFiltros(1)"></i>
+        </div>
+        <div class="col-12 mt-2">
+            <input type="text" id="inputBusca1" class="form-control" style="display: none; width: 30%">
+        </div>
+    </div>
+    <div class="row mt-2" id="botoesDataHora1" style="display: none;">
+        <div class="col-auto">
+            <button type="button" id="ontem1" class="btn btn-mini btn-outline-secondary" onclick="selecionarData('ontem', 1)">Ontem</button>
+        </div>
+        <div class="col-auto">
+            <button type="button" id="hoje1" class="btn btn-mini btn-outline-secondary" onclick="selecionarData('hoje', 1)">Hoje</button>
+        </div>
+        <div class="col-auto">
+            <button type="button" id="amanha1" class="btn btn-mini btn-outline-secondary" onclick="selecionarData('amanha', 1)">Amanhã</button>
+        </div>
+        <div class="col-auto">
+            <button type="button" id="fixo1" class="btn btn-mini btn-outline-secondary" onclick="mostrarCamposDataHora(1)">Fixo</button>
+        </div>
+    </div>
+    <div class="row mt-2 d-none" id="camposDataHora1">
+        <div class="col-auto">
+            <input type="date" id="dataFixo1" class="form-control">
+        </div>
+        <div class="col-auto">
+            <input type="time" id="horaFixa1" class="form-control">
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <div class="row g-2 align-items-center">
+        <div class="col-auto">
+            <select id="selectColuna2" class="form-select" onchange="toggleFiltros(this.value, 2)">
+                <option value="">Selecionar...</option>
+                <option value="Id">Ocorrência</option>
+                <option value="TipoOcorrencia">Tipo de Ocorrência</option>
+                <option value="Ocorreu_Em">Ocorreu em / Agendado para</option>
+                <option value="TransportadorDescricao">Transportador</option>
+                <option value="TransportadorCnpj">Transportador CNPJ/CPF</option>
+                <option value="Solucao_Em">Solução</option>
+                <option value="JaSolucionada">Já Solucionada</option>
+                <option value="DiasEmAberto">Dias em Aberto</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <select id="selectNumerico2" class="form-select">
+                <option value="0">Igual a</option>
+                <option value="1">Maior que</option>
+                <option value="2">Menor que</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <i class="fas fa-trash-alt fa-lg text-black-50" style="cursor: pointer;" onclick="limparFiltros(2)"></i>
+        </div>
+        <div class="col-12 mt-2">
+            <input type="text" id="inputBusca2" class="form-control" style="display: none; width: 30%">
+        </div>
+    </div>
+    <div class="row mt-2" id="botoesDataHora2" style="display: none;">
+        <div class="col-auto">
+            <button type="button" id="ontem2" class="btn btn-mini btn-outline-secondary" onclick="selecionarData('ontem', 2)">Ontem</button>
+        </div>
+        <div class="col-auto">
+            <button type="button" id="hoje2" class="btn btn-mini btn-outline-secondary" onclick="selecionarData('hoje', 2)">Hoje</button>
+        </div>
+        <div class="col-auto">
+            <button type="button" id="amanha2" class="btn btn-mini btn-outline-secondary" onclick="selecionarData('amanha', 2)">Amanhã</button>
+        </div>
+        <div class="col-auto">
+            <button type="button" id="fixo2" class="btn btn-mini btn-outline-secondary" onclick="mostrarCamposDataHora(2)">Fixo</button>
+        </div>
+    </div>
+    <div class="row mt-2 d-none" id="camposDataHora2">
+        <div class="col-auto">
+            <input type="date" id="dataFixo2" class="form-control">
+        </div>
+        <div class="col-auto">
+            <input type="time" id="horaFixa2" class="form-control">
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <div class="row g-2 align-items-center">
+        <div class="col-auto">
+            <select id="selectColuna3" class="form-select" onchange="toggleFiltros(this.value, 3)">
+                <option value="">Selecionar...</option>
+                <option value="Id">Ocorrência</option>
+                <option value="Id_Tipo">Tipo de Ocorrência</option>
+                <option value="Ocorreu_Em">Ocorreu em / Agendado para</option>
+                <option value="TransportadorDescricao">Transportador</option>
+                <option value="TransportadorCnpj">Transportador CNPJ/CPF</option>
+                <option value="Solucao_Em">Solução</option>
+                <option value="JaSolucionada">Já Solucionada</option>
+                <option value="DiasEmAberto">Dias em Aberto</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <select id="selectNumerico3" class="form-select">
+                <option value="0">Igual a</option>
+                <option value="1">Maior que</option>
+                <option value="2">Menor que</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <i class="fas fa-trash-alt fa-lg text-black-50" style="cursor: pointer;" onclick="limparFiltros(3)"></i>
+        </div>
+        <div class="col-12 mt-2">
+            <input type="text" id="inputBusca3" class="form-control" style="display: none; width: 30%">
+        </div>
+    </div>
+    <div class="row mt-2" id="botoesDataHora3" style="display: none;">
+        <div class="col-auto">
+            <button type="button" id="ontem3" class="btn btn-mini btn-outline-secondary" onclick="selecionarData('ontem', 3)">Ontem</button>
+        </div>
+        <div class="col-auto">
+            <button type="button" id="hoje3" class="btn btn-mini btn-outline-secondary" onclick="selecionarData('hoje', 3)">Hoje</button>
+        </div>
+        <div class="col-auto">
+            <button type="button" id="amanha3" class="btn btn-mini btn-outline-secondary" onclick="selecionarData('amanha', 3)">Amanhã</button>
+        </div>
+        <div class="col-auto">
+            <button type="button" id="fixo3" class="btn btn-mini btn-outline-secondary" onclick="mostrarCamposDataHora(3)">Fixo</button>
+        </div>
+    </div>
+    <div class="row mt-2 d-none" id="camposDataHora3">
+        <div class="col-auto">
+            <input type="date" id="dataFixo3" class="form-control">
+        </div>
+        <div class="col-auto">
+            <input type="time" id="horaFixa3" class="form-control">
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-auto">
+            <button type="button" class="btn btn-primary" id="btnFiltrar">Filtrar</button>
+        </div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-secondary" onclick="limparTodosFiltros()">Limpar</button>
+        </div>
+    </div>
+</div>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" />
+@section Scripts {
+    <script>
+        function filtrarOcorrencias() {
+            // Criação do objeto DTO com os parâmetros
+            var dto = {
+                filtros: []
+            };
+
+            for (var i = 1; i <= 3; i++) {
+                var coluna = $('#selectColuna' + i).val();
+                var operador = $('#selectNumerico' + i).val();
+                var busca = '';
+
+                if (coluna === 'Solucao_Em' || coluna === 'Ocorreu_Em') {
+                    // Se for SolucaoEm ou OcorreuEm, verifica se é data fixa ou outro
+                    if ($('#fixo' + i).hasClass('active')) {
+                        var dataFixo = $('#dataFixo' + i).val();
+                        var horaFixa = $('#horaFixa' + i).val();
+                        busca = dataFixo + ' ' + horaFixa;
+                    } else {
+                        busca = $('#inputBusca' + i).val();
+                    }
+                } else {
+                    // Outros casos apenas pegam o valor do campo inputBusca
+                    busca = $('#inputBusca' + i).val();
+                }
+
+                // Adiciona ao array de filtros apenas se houver algum valor de busca definido
+                if (busca) {
+                    var filtro = {
+                        coluna: coluna,
+                        operador: parseInt(operador), // Converte para inteiro
+                        busca: busca
+                    };
+                    dto.filtros.push(filtro);
+                }
+            }
+            return dto;
+        }
+
+        // Evento para acionar a filtragem ao clicar no botão de filtrar
+        $('#btnFiltrar').click(function () {
+            carregarPagina(1);
+        });
+        
+        // Função para carregar dados de uma página específica
+        function carregarPagina(pagina) {
+            var dto = filtrarOcorrencias();
+            $.ajax({
+                url: `/Home/CarregarOcorrencias?pagina=${pagina}`,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(dto), // Converte o objeto DTO para JSON
+                success: function (data) {
+                    $('#tabelaOcorrencias tbody').empty();
+                    console.log(data.ocorrencias);
+                    $(data.ocorrencias).each(function (index, ocorrencia) {
+
+                        var joinhaIcon = ocorrencia.jaSolucionada
+                            ? '<i class="fas fa-thumbs-up" style="color: green;"></i>'
+                            : '<i class="fas fa-thumbs-down" style="color: red;"></i>';
+
+                        var row = `
+                                    <tr>
+                                        <td><input type="checkbox"></td>
+                                        <td>${ocorrencia.id}</td>
+                                        <td>${ocorrencia.tipoOcorrencia}</td>
+                                        <td>${ocorrencia.ocorreuEm}</td>
+                                        <td>${ocorrencia.transportadorDescricao}</td>
+                                        <td>${ocorrencia.transportadorCnpj}</td>
+                                        <td>${ocorrencia.solucaoEm}</td>
+                                        <td>${joinhaIcon}</td>
+                                        <td>${ocorrencia.diasEmAberto}</td>
+                                        <td><i class="fas fa-exclamation" style="color: black;"></i></td>
+                                    </tr>
+                                `;
+                        $('#tabelaOcorrencias tbody').append(row);
+                    });
+
+                    // Atualiza a paginação
+                    $('#pagination').empty();
+
+                    var totalPages = data.totalPaginas;
+                    var paginaAtual = data.paginaAtual;
+
+                    // Botão "Anterior"
+                    var prevPage = paginaAtual - 1;
+                    var disabledPrev = paginaAtual === 1 ? "disabled" : "";
+                    var linkPrev = `<a class="page-link" href="#" onclick="carregarPagina(${prevPage})">Anterior</a>`;
+                    $('#pagination').append(`<li class="page-item ${disabledPrev}">${linkPrev}</li>`);
+
+                    // Páginas anteriores gradualmente
+                    var startPage = Math.max(1, paginaAtual - 5); // Mostrar páginas a partir de 1 ou paginaAtual - 5, o que for maior
+                    var endPage = Math.min(startPage + 9, totalPages); // Mostrar até 10 páginas no total, começando de startPage
+
+                    for (var i = startPage; i <= endPage; i++) {
+                        var liClass = i === paginaAtual ? "page-item active" : "page-item";
+                        var link = `<a class="page-link" href="#" onclick="carregarPagina(${i})">${i}</a>`;
+                        $('#pagination').append(`<li class="${liClass}">${link}</li>`);
+                    }
+
+                    // Botão "Próximo"
+                    var nextPage = paginaAtual + 1;
+                    var disabledNext = paginaAtual === totalPages ? "disabled" : "";
+                    var linkNext = `<a class="page-link" href="#" onclick="carregarPagina(${nextPage})">Próximo</a>`;
+                    $('#pagination').append(`<li class="page-item ${disabledNext}">${linkNext}</li>`);
+
+                    // Atualiza a contagem de registros
+                    $('#totalRegistros').html(`+ de ${@totalRegistros} Registros`);
+                },
+                error: function () {
+                    alert("Erro ao carregar dados.");
+                }
+            });
+        }
+
+        function toggleFiltros(valor, filtro) {
+            if (valor === 'Solucao_Em' || valor === 'Ocorreu_Em') {
+                $('#botoesDataHora' + filtro).show();
+                $('#inputBusca' + filtro).hide();
+            } else {
+                $('#botoesDataHora' + filtro).hide();
+                $('#camposDataHora' + filtro).removeClass('show').addClass('d-none');
+                $('#dataFixo' + filtro).val('');
+                $('#horaFixa' + filtro).val('');
+                $('.btn').removeClass('active'); // Limpa todos os botões ativos
+                $('#inputBusca' + filtro).show();
+            }
+        }
+
+        function selecionarData(opcao, filtro) {
+            var hoje = new Date();
+            var amanha = new Date();
+            amanha.setDate(hoje.getDate() + 1);
+            var ontem = new Date();
+            ontem.setDate(hoje.getDate() - 1);
+
+            var dataSelecionada;
+            switch (opcao) {
+                case 'hoje':
+                    dataSelecionada = hoje;
+                    break;
+                case 'amanha':
+                    dataSelecionada = amanha;
+                    break;
+                case 'ontem':
+                    dataSelecionada = ontem;
+                    break;
+                default:
+                    break;
+            }
+
+            var dataFormatada = dataSelecionada.toISOString().slice(0, 10);
+            var horaFormatada = dataSelecionada.toISOString().slice(11, 16);
+
+            $('#inputBusca'+ filtro).val(dataFormatada);
+            $('#camposDataHora' + filtro).removeClass('show').addClass('d-none');
+            $('#dataFixo'+ filtro).val('');
+            $('#horaFixa' + filtro).val('');
+
+            // Remover a classe 'active' de todos os botões e adicionar ao botão selecionado
+            $('#botoesDataHora' + filtro + ' .btn').removeClass('active').css({ 'color': 'black', 'background-color': 'transparent' });
+            $('#' + opcao + filtro).addClass('active').css({ 'color': 'white', 'background-color': '#007bff' });
+        }
+
+        function mostrarCamposDataHora(filtro) {
+            $('#camposDataHora' + filtro).removeClass('d-none').addClass('show');
+
+            // Remover a classe 'active' de todos os botões e adicionar ao botão selecionado
+            $('#botoesDataHora' + filtro + ' .btn').removeClass('active').css({ 'color': 'black', 'background-color': 'transparent' });
+            $('#fixo' + filtro).addClass('active').css({ 'color': 'white', 'background-color': '#007bff' });
+        }
+
+        function limparFiltros(filtro) {
+            $('#selectColuna' + filtro).val('');
+            $('#selectNumerico' + filtro).val('0');
+            $('#inputBusca' + filtro).val('').hide();
+            $('#botoesDataHora ' + filtro +'.btn').removeClass('active').css({ 'color': 'black', 'border-color': 'black', 'background-color': 'transparent' });
+            $('#botoesDataHora' + filtro).hide();
+            $('#camposDataHora' + filtro).removeClass('show').addClass('d-none');
+            $('#dataFixo' + filtro).val('');
+            $('#horaFixa' + filtro).val('');
+        }
+
+        // Função para limpar todos os filtros
+        function limparTodosFiltros() {
+            for (var i = 1; i <= 3; i++) {
+                limparFiltros(i);
+            }
+            carregarPagina(1); // Recarrega a primeira página sem filtros
+        }
+
+        // Carrega a primeira página ao carregar a página inicialmente
+        $(document).ready(function () {
+            carregarPagina(1);
+        });
+    </script>
+
+    <style>
+        body {
+            background-color: #fff; /* Cor de fundo branca para o body */
+            padding: 10px; /* Espaçamento interno reduzido para o conteúdo da página */
+            font-size: 14px; /* Tamanho da fonte geral reduzido */
+        }
+
+        h1 {
+            font-size: 1.5rem; /* Reduz o tamanho do título */
+        }
+
+        #tabelaOcorrencias thead {
+            background-color: #007bff; /* Cor de fundo azul para o cabeçalho da tabela */
+            color: #fff; /* Cor do texto branco */
+        }
+
+        #tabelaOcorrencias th,
+        #tabelaOcorrencias td {
+            vertical-align: middle; /* Centraliza verticalmente o conteúdo das células */
+            text-align: center; /* Centraliza horizontalmente o conteúdo das células */
+            height: 40px; /* Altura um pouco reduzida para as células */
+            padding: 8px; /* Espaçamento interno das células reduzido */
+            white-space: nowrap; /* Evita a quebra de texto */
+            text-overflow: ellipsis; /* Truncamento de texto com ellipsis */
+            overflow: hidden; /* Esconde o texto que extrapola a largura da célula */
+        }
+
+        .text-right {
+            color: #777; /* Cor do texto */
+            font-size: 13px; /* Tamanho da fonte reduzido */
+            padding: 6px; /* Espaçamento interno reduzido */
+        }
+
+        .form-select {
+            font-size: 14px; /* Tamanho da fonte para selects reduzido */
+        }
+
+        .mt-3 {
+            margin-top: 1.5rem; /* Espaçamento superior reduzido para áreas com classe mt-3 */
+        }
+
+        .fa-lg {
+            font-size: 1.2rem; /* Tamanho do ícone reduzido */
+        }
+
+        .btn-mini {
+            padding: 0.25rem 0.5rem;
+            border-radius: 10px;
+            color: black; /* Cor do texto padrão */
+            background-color: transparent;
+            border: 1px solid #ced4da; /* Borda preta padrão */
+        }
+
+            .btn-mini.active {
+                background: #007bff !important; /* Azul quando selecionado */
+                color: white; /* Texto branco quando selecionado */
+                border-color: #007bff; /* Borda azul quando selecionado */
+            }
+
+        .page-item .page-link {
+            color: black; /* Cor normal do texto */
+            border-color: #ced4da; /* Cor da borda padrão */
+        }
+
+        .page-item.active .page-link {
+            background-color: #007bff; /* Cor de fundo azul */
+            border-color: #007bff; /* Cor da borda azul */
+            color: white; /* Texto branco */
+        }
+    </style>
+}
