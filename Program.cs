@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SistemaDeOcorrencias;
+using SistemaDeOcorrencias.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(8, 0, 26))));
+
+builder.Services.AddTransient<OcorrenciaService>();    // Registra OcorrenciaService como serviço transient
 
 var app = builder.Build();
 

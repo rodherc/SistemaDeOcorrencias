@@ -1,0 +1,78 @@
+﻿body {
+    background-color: #fff; /* Cor de fundo branca para o body */
+    padding: 10px; /* Espaçamento interno reduzido para o conteúdo da página */
+    font-size: 14px; /* Tamanho da fonte geral reduzido */
+}
+
+h1 {
+    font-size: 1.5rem; /* Reduz o tamanho do título */
+}
+
+#tabelaOcorrencias thead {
+    background-color: #007bff; /* Cor de fundo azul para o cabeçalho da tabela */
+    color: #fff; /* Cor do texto branco */
+}
+
+#tabelaOcorrencias th,
+#tabelaOcorrencias td {
+    vertical-align: middle; /* Centraliza verticalmente o conteúdo das células */
+    text-align: center; /* Centraliza horizontalmente o conteúdo das células */
+    height: 40px; /* Altura um pouco reduzida para as células */
+    padding: 8px; /* Espaçamento interno das células reduzido */
+    white-space: nowrap; /* Evita a quebra de texto */
+    text-overflow: ellipsis; /* Truncamento de texto com ellipsis */
+    overflow: hidden; /* Esconde o texto que extrapola a largura da célula */
+}
+
+.text-right {
+    color: #777; /* Cor do texto */
+    font-size: 13px; /* Tamanho da fonte reduzido */
+    padding: 6px; /* Espaçamento interno reduzido */
+}
+
+.form-select {
+    font-size: 14px; /* Tamanho da fonte para selects reduzido */
+}
+
+.mt-3 {
+    margin-top: 1.5rem; /* Espaçamento superior reduzido para áreas com classe mt-3 */
+}
+
+.fa-lg {
+    font-size: 1.2rem; /* Tamanho do ícone reduzido */
+}
+
+.btn-mini {
+    padding: 0.25rem 0.5rem;
+    border-radius: 10px;
+    color: black; /* Cor do texto padrão */
+    background-color: transparent;
+    border: 1px solid #ced4da; /* Borda preta padrão */
+}
+
+    .btn-mini.active {
+        background: #007bff !important; /* Azul quando selecionado */
+        color: white; /* Texto branco quando selecionado */
+        border-color: #007bff; /* Borda azul quando selecionado */
+    }
+
+.page-item .page-link {
+    color: black; /* Cor normal do texto */
+    border-color: #ced4da; /* Cor da borda padrão */
+}
+
+.page-item.active .page-link {
+    background-color: #007bff; /* Cor de fundo azul */
+    border-color: #007bff; /* Cor da borda azul */
+    color: white; /* Texto branco */
+}
+
+/* Estilo personalizado para a modal */
+.modal-lg {
+    max-width: 90%; /* Ajusta a largura máxima da modal */
+}
+
+.modal-body {
+    max-height: calc(100vh - 210px); /* Ajusta a altura máxima do corpo da modal */
+    overflow-y: auto; /* Adiciona barra de rolagem vertical se o conteúdo ultrapassar a altura máxima */
+}

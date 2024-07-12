@@ -2271,11 +2271,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\rodri\\Documents\\teste2\\SistemaDeOcorrencias\\SistemaDeOcorrencias.csproj",
+      "projectUniqueName": "C:\\Users\\rodri\\OneDrive\\Documentos\\SistemaDeOcorrencias\\SistemaDeOcorrencias.csproj",
       "projectName": "SistemaDeOcorrencias",
-      "projectPath": "C:\\Users\\rodri\\Documents\\teste2\\SistemaDeOcorrencias\\SistemaDeOcorrencias.csproj",
+      "projectPath": "C:\\Users\\rodri\\OneDrive\\Documentos\\SistemaDeOcorrencias\\SistemaDeOcorrencias.csproj",
       "packagesPath": "C:\\Users\\rodri\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\rodri\\Documents\\teste2\\SistemaDeOcorrencias\\obj\\",
+      "outputPath": "C:\\Users\\rodri\\OneDrive\\Documentos\\SistemaDeOcorrencias\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\rodri\\AppData\\Roaming\\NuGet\\NuGet.Config",

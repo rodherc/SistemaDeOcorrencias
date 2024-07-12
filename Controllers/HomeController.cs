@@ -1,7 +1,9 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using SistemaDeOcorrencias.Enum;
 using SistemaDeOcorrencias.Models;
+using SistemaDeOcorrencias.Services;
 
 namespace SistemaDeOcorrencias.Controllers;
 
@@ -9,11 +11,13 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly AppDbContext _context;
+    private readonly OcorrenciaService _ocorrenciaService;
 
     public HomeController(ILogger<HomeController> logger, AppDbContext context)
     {
         _logger = logger;
         _context = context;
+        _ocorrenciaService = new OcorrenciaService(_context);
     }
 
     public IActionResult Privacy()
@@ -31,12 +35,27 @@ public class HomeController : Controller
     {
         const int ItensPorPagina = 10; // Número de itens por página
 
-        int totalRegistros = await _context.Ocorrencia.CountAsync();
+        int totalRegistros = await _ocorrenciaService.Count();
         int totalPaginas = (int)Math.Ceiling(totalRegistros / (double)ItensPorPagina);
 
         ViewBag.PaginaAtual = pagina;
         ViewBag.TotalPaginas = totalPaginas;
-        ViewBag.totalRegistros = totalRegistros;
+        ViewBag.ColunaFiltroOptions = EnumColunaFiltro.GetValues(typeof(EnumColunaFiltro))
+                                          .Cast<EnumColunaFiltro>()
+                                          .Select(v => new SelectListItem
+                                          {
+                                              Text = v.GetDisplayName(),
+                                              Value = v.ToString()
+                                          });
+
+        ViewBag.CondicaoNumericaOptions = EnumOperadorComparacao.GetValues(typeof(EnumOperadorComparacao))
+                                              .Cast<EnumOperadorComparacao>()
+                                              .Select(v => new SelectListItem
+                                              {
+                                                  Text = EnumExtensions.GetDisplayName(v),
+                                                  Value = ((int)v).ToString()
+                                              });
+
 
         return View();
     }
@@ -48,94 +67,7 @@ public class HomeController : Controller
         {
             const int ItensPorPagina = 10; // Número de itens por página
 
-            IQueryable<Ocorrencia> query = _context.Ocorrencia
-                .Include(o => o.Tipo)
-                .Include(o => o.Transportador);
-
-            // Verifica se o DTO de filtro não está vazio e aplica os filtros se necessário
-            if (dto != null && dto.Filtros != null && dto.Filtros.Any())
-            {
-                foreach (var filtro in dto.Filtros)
-                {
-                    string coluna = filtro.Coluna;
-                    string busca = filtro.Busca;
-                    int operador = filtro.Operador;
-
-                    switch (coluna)
-                    {
-                        case "Id":
-                            long id;
-                            if (long.TryParse(busca, out id))
-                            {
-                                query = query.Where(o => o.Id == id);
-                            }
-                            break;
-
-                        case "Solucao_Em":
-                            DateTime data;
-                            if (DateTime.TryParse(busca, out data))
-                            {
-                                switch (operador)
-                                {
-                                    case 0: // Igual a (ou padrão)
-                                        query = query.Where(o => o.Solucao_Em == data);
-                                        break;
-                                    case 2: // Maior que
-                                        query = query.Where(o => o.Solucao_Em > data);
-                                        break;
-                                    case 3: // Menor que
-                                        query = query.Where(o => o.Solucao_Em < data);
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                            break;
-                        case "Ocorreu_Em":
-                            DateTime dataBusca;
-                            if (DateTime.TryParse(busca, out dataBusca))
-                            {
-                                switch (operador)
-                                {
-                                    case 0:
-                                        query = query.Where(o => o.Ocorreu_Em == dataBusca);
-                                        break;
-                                    case 2:
-                                        query = query.Where(o => o.Ocorreu_Em > dataBusca);
-                                        break;
-                                    case 3:
-                                        query = query.Where(o => o.Ocorreu_Em < dataBusca);
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                            break;
-
-                        case "TransportadorDescricao":
-                            query = query.Where(o => o.Transportador.Descricao == busca);
-                            break;
-
-                        case "TransportadorCnpj":
-                            query = query.Where(o => o.Transportador.CNPJ == busca);
-                            break;
-
-                        case "TipoOcorrencia":
-                            query = query.Where(o => o.Tipo.Descricao == busca);
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-            }
-
-            // Ordenação e paginação
-            var ocorrencias = await query
-                .OrderByDescending(o => o.Ocorreu_Em)
-                .Skip((pagina - 1) * ItensPorPagina)
-                .Take(ItensPorPagina)
-                .ToListAsync();
+            (var ocorrencias, int totalRegistros) = await _ocorrenciaService.CarregarOcorrencias(pagina, dto);
 
             // Formatação das ocorrências para envio
             var ocorrenciasFormatadas = ocorrencias.Select(o => new
@@ -150,15 +82,27 @@ public class HomeController : Controller
                 DiasEmAberto = (DateTime.Now - o.Ocorreu_Em).Days 
             });
 
-            int totalRegistros = await query.CountAsync();
             int totalPaginas = (int)Math.Ceiling(totalRegistros / (double)ItensPorPagina);
 
-            return Json(new { ocorrencias = ocorrenciasFormatadas, totalPaginas, paginaAtual = pagina });
+            return Json(new { ocorrencias = ocorrenciasFormatadas, totalPaginas, paginaAtual = pagina , totalRegistros = totalRegistros});
         }
         catch (Exception ex)
         {
             return BadRequest("Erro ao carregar ocorrências: " + ex.Message);
         }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Detalhes(int idOcorrencia)
+    {
+        var ocorrencia = await _ocorrenciaService.Detalhes(idOcorrencia);
+
+        if (ocorrencia is null)
+        {
+            return NotFound();
+        }
+
+        return Json(ocorrencia);
     }
 }
 
