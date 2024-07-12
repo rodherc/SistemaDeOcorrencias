@@ -70,22 +70,21 @@ SELECT
     T.DESCRICAO AS TipoDescricao,
     TR.CNPJ AS TransportadoraCNPJ,
     TR.DESCRICAO AS TransportadoraDescricao,
-    -- Campos adicionais que podem ser fixos ou calculados
-    '296126-5' AS Documento, -- Exemplo de valor fixo
-    '0000972686' AS Pedido, -- Exemplo de valor fixo
-    'Sem infromação' AS Localizacao, -- Exemplo de valor fixo
-    'Responsável pela Solução' AS ResponsavelSolucao, -- Exemplo de valor fixo
-    CONCAT(TR.CNPJ, ' - CXS 101 - (CAXIAS DO SUL/RS)') AS Interessado, -- Exemplo de valor fixo
-    'Responsável do Interessado' AS ResponsavelInteressado, -- Exemplo de valor fixo
-    'SAC' AS OrigemInformacao, -- Exemplo de valor fixo
-    'Contato' AS Contato, -- Exemplo de valor fixo
-    '' AS RgCpf, -- Exemplo de valor fixo
-    '' AS Responsavel, -- Exemplo de valor fixo
-    'ADV - CPO' AS DepartamentoPadrao, -- Exemplo de valor fixo
-    'Tomador de Serviço' AS UsuarioResponsavel, -- Exemplo de valor fixo
-    'CAXIAS DO SUL' AS CidadeDestino, -- Exemplo de valor fixo
-    'RIO GRANDE SO SUL' AS EstadoDestino, -- Exemplo de valor fixo
-    'Observações' AS Observacoes -- Exemplo de valor fixo
+    '296126-5' AS Documento,
+    '0000972686' AS Pedido, 
+    'Sem infromação' AS Localizacao, 
+    'Responsável pela Solução' AS ResponsavelSolucao,
+    CONCAT(TR.CNPJ, ' - CXS 101 - (CAXIAS DO SUL/RS)') AS Interessado,
+    'Responsável do Interessado' AS ResponsavelInteressado, 
+    'SAC' AS OrigemInformacao,
+    'Contato' AS Contato, 
+    '' AS RgCpf, 
+    '' AS Responsavel, 
+    'ADV - CPO' AS DepartamentoPadrao,
+    'Tomador de Serviço' AS UsuarioResponsavel, 
+    'CAXIAS DO SUL' AS CidadeDestino,
+    'RIO GRANDE SO SUL' AS EstadoDestino,
+    'Observações' AS Observacoes
 FROM 
     OCORRENCIA O
 JOIN 
